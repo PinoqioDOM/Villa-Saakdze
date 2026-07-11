@@ -3,26 +3,12 @@
 import { useEffect, useRef } from "react";
 
 type ScrollVideoHeroProps = {
-  /** Video source, e.g. "/videos/villa-saakadze.mp4" (place file in /public/videos/). */
   src: string;
-  /** Total scroll distance, in viewport-heights, mapped onto the full video duration. */
   trackLengthVh?: number;
-  /** 0–1 lerp factor per frame; higher = snappier scrub, lower = floatier. */
   smoothing?: number;
-  /** Text lockup that covers the source watermark in the top-right of the frame. */
   brandMark?: string;
 };
 
-/**
- * Apple-style scroll-scrubbed hero.
- *
- * A tall "scroll track" (trackLengthVh) wraps a sticky 100dvh stage. As the
- * user scrolls through the track, scroll progress (0–1) is mapped to
- * video.currentTime (0–duration) inside a requestAnimationFrame loop, with
- * light lerp smoothing. No requestVideoFrameCallback dependency — works
- * everywhere <video> does. The video never autoplays, loops, or accepts
- * pointer input, so it reads as a scroll-driven scene, not a media player.
- */
 export default function ScrollVideoHero({
   src,
   trackLengthVh = 400,
@@ -43,13 +29,6 @@ export default function ScrollVideoHero({
 
     let raf = 0;
 
-    /**
-     * The video renders with object-fit: cover, so container percentages do
-     * NOT match source-frame percentages once the frame is cropped. Compute
-     * the displayed frame rect and pin the brand overlay over the top-right
-     * ~15% of the SOURCE frame (where the watermark lives), clamped to the
-     * viewport. Re-runs on resize, so it holds at 1440 / 1024 / 768 / 390px.
-     */
     const placeOverlay = () => {
       const overlay = overlayRef.current;
       if (!overlay) return;
@@ -57,7 +36,7 @@ export default function ScrollVideoHero({
       const ch = video.clientHeight;
       const fw = video.videoWidth || 16;
       const fh = video.videoHeight || 9;
-      const scale = Math.max(cw / fw, ch / fh); // object-fit: cover
+      const scale = Math.max(cw / fw, ch / fh); 
       const dw = fw * scale;
       const dh = fh * scale;
       const ox = (cw - dw) / 2;
@@ -76,7 +55,7 @@ export default function ScrollVideoHero({
     const onMeta = () => {
       durationRef.current = video.duration || 0;
       try {
-        video.currentTime = 0.001; // nudge so the first frame paints (Safari)
+        video.currentTime = 0.001;
       } catch {
         /* not seekable yet — first tick will handle it */
       }

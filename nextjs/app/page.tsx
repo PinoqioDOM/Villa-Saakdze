@@ -1,5 +1,5 @@
 import { Cormorant_Garamond, Jost } from "next/font/google";
-import ScrollVideoHero from "@/components/ScrollVideoHero";
+import ScrollVideoHero from "../components/ScrollVideoHero";
 
 const display = Cormorant_Garamond({
   subsets: ["latin"],
